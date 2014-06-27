@@ -15,7 +15,7 @@ module ElibriEdiApiClient
                     :invoicing_mode,    #one of (with_despatch, after_receive) - should the invoice be created with shipment, or after the customer
                                         #has confirmed, what he or she has received
                     :line_items         #one or many of OrderItem
-     
+
 
       validates :buyer_number, presence: true
       validates :buyer_id, presence: true
@@ -37,6 +37,7 @@ module ElibriEdiApiClient
 
       def to_hash
         {}.tap do |res|
+          res[:kind] = 'ORDER'
           res[:buyer_number] = self.buyer_number
           res[:buyer_id] = self.buyer_id
           res[:seller_id] = self.seller_id
