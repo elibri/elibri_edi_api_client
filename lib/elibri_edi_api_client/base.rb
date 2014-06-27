@@ -26,6 +26,9 @@ module ElibriEdiApiClient
       elsif id_or_data.is_a? Hash
         @data = id_or_data
         @id = @data[:id] if @data[:id]
+      elsif id_or_data.respond_to?(:to_edi_message)
+        @data = id_or_data.to_edi_message
+        @id = @data[:id] if @data[:id]
       else
         fail InputDataError, "Please give integer id or hash of data"
       end

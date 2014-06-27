@@ -32,10 +32,16 @@ module ElibriEdiApiClient
       end
 
       def add_line_item(item)
-        self.line_items << item
+        if item.is_a?(Hash)
+          self.line_items << OrderItem.new(item)
+        elsif item.is_a?(OrderItem)
+          self.line_items << item
+        else
+          raise ArgumentError, "Hash or ElibriEdiApiClient::Factories::OrderItem expected"
+        end
       end
 
-      def to_hash
+      def to_edi_message
         {}.tap do |res|
           res[:kind] = 'ORDER'
           res[:buyer_number] = self.buyer_number
