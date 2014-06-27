@@ -193,7 +193,8 @@ module ElibriEdiApiClient
         end
       else
         Faraday.new(url: ::ElibriEdiApiClient::Base.config_base_url) do |builder|
-          builder.request :basic_authentication, 'api', ::ElibriEdiApiClient::Base.config_api_key 
+          builder.use Faraday::Request::BasicAuthentication, 'api', ::ElibriEdiApiClient::Base.config_api_key 
+          builder.adapter Faraday.default_adapter
         end
       end
     end
