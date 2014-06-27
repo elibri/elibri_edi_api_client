@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = ElibriEdiApiClient::VERSION
   spec.authors       = ["Piotr Romańczuk", "Tomasz Meka"]
   spec.email         = ["p.romanczuk@elibri.com.pl", "tomek@elibri.com.pl"]
-  spec.description   = %q{A client for elibri API}
-  spec.summary       = %q{A client for elibri API}
+  spec.description   = %q{A client for elibri EDI API}
+  spec.summary       = %q{A client for elibri EDI API}
   spec.homepage      = "https://www.elibri.com.pl"
   spec.license       = "MIT"
 
