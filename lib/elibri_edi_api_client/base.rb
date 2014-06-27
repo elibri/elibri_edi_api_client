@@ -183,7 +183,7 @@ module ElibriEdiApiClient
     private
     #FIXME: Najlepiej byłoby udostępnić na zewnątrz możliwość budowania obiektu @session
     # (w sieci raczej używa się nazwy connection), tak aby to wykorzystujący naszego klienta
-    # sam decydował, czy chce w denym momencie używać czy testować
+    # sam decydował, czy chce w danym momencie używać czy testować
     def new_session
       if Rails.env == 'test'
         # Faraday.new(url: ::ElibriEdiApiClient::Base.config_base_url) do |config|
