@@ -164,21 +164,23 @@ module ElibriEdiApiClient
         if response.status == 201 #created
           @id = @response_data[:id]
         end
+      elsif response.status == 401 #unauthorized
+        fail UnauthorizedError
       else
         begin
           json = JSON.parse response.body, symbolize_names: true
         rescue JSON::ParserError 
-          fail "api call returned invalid data: #{response.body}"
+          fail ServerError "api call failed with code: #{response.status} and returned invalid data: #{response.body}"
         end
         #TODO: wyświetlać lub przekazywać dalej pełną informację o błędach validacji. Format response jest taki:
         # {:message=>"Validation failed", :errors=>[{:field=>"external_order_id", :message=>"zostało już zajęte"}]}
         if json[:message] && json[:errors]
-          fail "api call failed with code: #{response.status} and message: #{json[:message]}\n" +
+          fail ServerError "api call failed with code: #{response.status} and message: #{json[:message]}\n" +
                "errors: #{json[:errors].inspect}"
         elsif json[:message]
-          fail "api call failed with code: #{response.status} and message: #{json[:message]}"
+          fail ServerError "api call failed with code: #{response.status} and message: #{json[:message]}"
         else
-          fail "api call failed with code: #{response.status} and body: #{json.inspect}"
+          fail ServerError "api call failed with code: #{response.status} and body: #{json.inspect}"
         end
       end
     end
@@ -214,4 +216,6 @@ module ElibriEdiApiClient
   class TimeoutError < ElibriEdiApiClient::Error; end
   class ConnectionFailedError < ElibriEdiApiClient::Error; end
   class InputDataError < ElibriEdiApiClient::Error; end
+  class UnauthorizedError < ElibriEdiApiClient::Error; end
+  class ServerError < ElibriEdiApiClient::Error; end
 end
