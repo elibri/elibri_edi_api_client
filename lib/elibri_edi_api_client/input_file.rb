@@ -16,11 +16,6 @@ module ElibriEdiApiClient
       self
     end
 
-    def ediex_mark_processed
-      enqueue_ediex_mark_processed
-    end
-
-    private
     def enqueue_ediex_mark_processed
       Resque.enqueue ResqueJob::Ediex::ChangeInputFileState, self[:id], :processed_ok
     end
