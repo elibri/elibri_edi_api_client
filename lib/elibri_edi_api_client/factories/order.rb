@@ -53,7 +53,7 @@ module ElibriEdiApiClient
           res[:due_date] = self.due_date || Date.today + 7.days
           res[:despatching_mode] = self.despatching_mode
           res[:invoicing_mode] = self.invoicing_mode
-          res[:line_items] = self.line_items.map(&:to_hash)
+          res[:line_items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = idx + 1; line }
         end
       end
     end
