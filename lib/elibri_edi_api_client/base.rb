@@ -7,6 +7,7 @@ module ElibriEdiApiClient
     'INVOICE' => 'ElibriEdiApiClient::Invoice',
     'FILE' => 'ElibriEdiApiClient::InputFile'
   }
+
   class Base
 
     #configuration
@@ -30,7 +31,7 @@ module ElibriEdiApiClient
         @data = id_or_data.to_edi_message
         @id = @data[:id] if @data[:id]
       else
-        fail InputDataError, "Please give integer id or hash of data"
+        fail InputDataError, "Please give integer id, hash of data or edi data Factory"
       end
     end
 
@@ -151,10 +152,10 @@ module ElibriEdiApiClient
             raise ConnectionFailedError.new("Unable to connect to #{full_url(path)}")
           end
         end
-      process_response res
+      process_response res, path
     end
 
-    def process_response(response)
+    def process_response(response, path)
 
       if response.status.to_s[0] == '2' #status 200 (GET OK) lub 201 (created OK)
         json = JSON.parse response.body, symbolize_names: true
@@ -164,24 +165,16 @@ module ElibriEdiApiClient
         if response.status == 201 #created
           @id = @response_data[:id]
         end
+      elsif response.status == 400
+        fail BadRequestError.new   status: response.status, result: response.body, url: full_url(path)
       elsif response.status == 401 #unauthorized
-        fail UnauthorizedError
-      else
-        begin
-          json = JSON.parse response.body, symbolize_names: true
-        rescue JSON::ParserError 
-          fail ServerError "api call failed with code: #{response.status} and returned invalid data: #{response.body}"
-        end
-        #TODO: wyświetlać lub przekazywać dalej pełną informację o błędach validacji. Format response jest taki:
-        # {:message=>"Validation failed", :errors=>[{:field=>"external_order_id", :message=>"zostało już zajęte"}]}
-        if json[:message] && json[:errors]
-          fail ServerError "api call failed with code: #{response.status} and message: #{json[:message]}\n" +
-               "errors: #{json[:errors].inspect}"
-        elsif json[:message]
-          fail ServerError "api call failed with code: #{response.status} and message: #{json[:message]}"
-        else
-          fail ServerError "api call failed with code: #{response.status} and body: #{json.inspect}"
-        end
+        fail UnauthorizedError.new status: response.status, result: response.body, url: full_url(path)
+      elsif response.status == 404
+        fail NotFoundError.new     status: response.status, result: response.body, url: full_url(path)
+      elsif (400..499).include? response.status
+        fail HTTPClientError.new   status: response.status, result: response.body, url: full_url(path)
+      elsif (500..599).include? response.status
+        fail ServerError.new       status: response.status, result: response.body, url: full_url(path)
       end
     end
 
@@ -211,11 +204,24 @@ module ElibriEdiApiClient
 
   end
 
-
   class Error < StandardError; end
   class TimeoutError < ElibriEdiApiClient::Error; end
   class ConnectionFailedError < ElibriEdiApiClient::Error; end
   class InputDataError < ElibriEdiApiClient::Error; end
-  class UnauthorizedError < ElibriEdiApiClient::Error; end
-  class ServerError < ElibriEdiApiClient::Error; end
+
+  class HTTPError < Error
+    attr_accessor :status, :result, :url
+    def initialize(options)
+      @status = options[:status]
+      @result = options[:result]
+      @url = options[:url]
+    end
+  end
+  class HTTPClientError < HTTPError; end
+  class UnauthorizedError < HTTPClientError; end
+  class NotFoundError < HTTPClientError; end
+  class BadRequestError < HTTPClientError; end
+
+  class ServerError < HTTPError; end
+
 end
