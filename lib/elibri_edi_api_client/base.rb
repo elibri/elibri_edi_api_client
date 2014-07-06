@@ -77,6 +77,14 @@ module ElibriEdiApiClient
       @data[:id]
     end
 
+    def self.def_attributes(*attributes)
+      attributes.each do |attr|
+        define_method attr do
+          @data[attr.to_sym]
+        end
+      end
+    end
+
     def self.klass_from_kind(kind)
       MESSAGE_KIND_MAPPING[kind].constantize
     end
