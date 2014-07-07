@@ -175,6 +175,8 @@ module ElibriEdiApiClient
         end
       elsif response.status == 400
         fail BadRequestError.new   status: response.status, result: response.body, url: full_url(path)
+      elsif response.status == 403
+        fail ForbiddenError.new    status: response.status, result: response.body, url: full_url(path)
       elsif response.status == 401 #unauthorized
         fail UnauthorizedError.new status: response.status, result: response.body, url: full_url(path)
       elsif response.status == 404
@@ -229,6 +231,7 @@ module ElibriEdiApiClient
   class UnauthorizedError < HTTPClientError; end
   class NotFoundError < HTTPClientError; end
   class BadRequestError < HTTPClientError; end
+  class ForbiddenError < HTTPClientError; end
 
   class ServerError < HTTPError; end
 
