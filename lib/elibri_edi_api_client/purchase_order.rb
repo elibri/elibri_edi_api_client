@@ -1,8 +1,6 @@
 module ElibriEdiApiClient
   class PurchaseOrder < Base
-    # get :find, "/orders/:id"
-    # post :create, "/orders"
-    #
+    ##
     # Używać w następujący sposób:
     # # przygotować hash z danymi zgodnie ze specyfikacją API
     # data = { ... }

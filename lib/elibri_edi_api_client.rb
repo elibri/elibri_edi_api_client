@@ -6,6 +6,7 @@ require "elibri_edi_api_client/despatch_advice"
 require "elibri_edi_api_client/input_file"
 require "elibri_edi_api_client/account"
 require "elibri_edi_api_client/company"
+require "elibri_edi_api_client/invoice"
 require "elibri_edi_api_client/factories/order"
 require "elibri_edi_api_client/factories/order_item"
 
