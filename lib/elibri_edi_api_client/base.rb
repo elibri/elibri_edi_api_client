@@ -226,6 +226,10 @@ module ElibriEdiApiClient
       @result = options[:result]
       @url = options[:url]
     end
+
+    def to_s
+      "API call to #{@url} returned with status #{@status} and result:\n#{@result.inspect}"
+    end
   end
   class HTTPClientError < HTTPError; end
   class UnauthorizedError < HTTPClientError; end

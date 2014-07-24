@@ -10,6 +10,12 @@ module ElibriEdiApiClient
       o
     end
 
+    def self.find_by_seller_number(seller_number)
+      o = new(seller_number: seller_number)
+      o.get "v1/despatch_advices/by_seller_number?number=#{CGI::escape seller_number}"
+      o
+    end
+
     def self.create(data)
       unless data[:edi_purchase_order_id]
         fail InputDataError.new "Can't create DespatchAdvice without :edi_purchase_order_id provided"
