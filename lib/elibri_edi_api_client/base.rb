@@ -36,7 +36,7 @@ module ElibriEdiApiClient
     end
 
     def session
-      @sesssion ||= new_session
+      @sesssion ||= self.class.new_session
     end
 
     def post(url)
@@ -143,7 +143,7 @@ module ElibriEdiApiClient
     end
 
     def reconnect
-      @session = new_session
+      @session = self.class.new_session
     end
 
     def make_safe_request(path, &block)
@@ -192,11 +192,12 @@ module ElibriEdiApiClient
     #FIXME: Najlepiej byłoby udostępnić na zewnątrz możliwość budowania obiektu @session
     # (w sieci raczej używa się nazwy connection), tak aby to wykorzystujący naszego klienta
     # sam decydował, czy chce w danym momencie używać czy testować
-    def new_session
+    def self.new_session
       if Rails.env == 'test'
+        @server ||= ::API::V1::GrapeServer.new
         Faraday.new do |builder|
           builder.use Faraday::Request::Hmac, ::ElibriEdiApiClient::Base.config_api_key, ::ElibriEdiApiClient::Base.config_secret_key
-          builder.adapter :rack, ::API::V1::GrapeServer.new
+          builder.adapter :rack, @server
         end
       else
         Faraday.new(url: ::ElibriEdiApiClient::Base.config_base_url) do |builder|
