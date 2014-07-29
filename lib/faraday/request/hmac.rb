@@ -5,6 +5,13 @@ module Faraday
 
     def initialize(app, token, secret)
       @app, @token, @secret = app, token, secret
+      unless @token && @token.size > 0
+        raise "token may not be blank"
+      end
+
+      unless @secret && @secret.size > 0
+        raise "secret may not be blank"
+      end
     end
 
     def call(env)
