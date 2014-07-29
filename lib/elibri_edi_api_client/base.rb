@@ -12,7 +12,7 @@ module ElibriEdiApiClient
 
     #configuration
     class << self
-      attr_accessor :config_base_url, :config_api_key
+      attr_accessor :config_base_url, :config_api_key, :config_secret_key
     end
     def self.setup(&block)
       yield self
@@ -174,17 +174,17 @@ module ElibriEdiApiClient
           @id = @response_data[:id]
         end
       elsif response.status == 400
-        fail BadRequestError.new   status: response.status, result: response.body, url: full_url(path)
+        fail BadRequestError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 403
-        fail ForbiddenError.new    status: response.status, result: response.body, url: full_url(path)
+        fail ForbiddenError.new    status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 401 #unauthorized
-        fail UnauthorizedError.new status: response.status, result: response.body, url: full_url(path)
+        fail UnauthorizedError.new status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 404
-        fail NotFoundError.new     status: response.status, result: response.body, url: full_url(path)
+        fail NotFoundError.new     status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (400..499).include? response.status
-        fail HTTPClientError.new   status: response.status, result: response.body, url: full_url(path)
+        fail HTTPClientError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (500..599).include? response.status
-        fail ServerError.new       status: response.status, result: response.body, url: full_url(path)
+        fail ServerError.new       status: response.status, result: extract_message(response.body), url: full_url(path)
       end
     end
 
@@ -194,18 +194,27 @@ module ElibriEdiApiClient
     # sam decydował, czy chce w danym momencie używać czy testować
     def new_session
       if Rails.env == 'test'
-        # Faraday.new(url: ::ElibriEdiApiClient::Base.config_base_url) do |config|
         Faraday.new do |builder|
-          builder.use Faraday::Request::BasicAuthentication, 'api', ::ElibriEdiApiClient::Base.config_api_key 
+          builder.use Faraday::Request::Hmac, ::ElibriEdiApiClient::Base.config_api_key, ::ElibriEdiApiClient::Base.config_secret_key
           builder.adapter :rack, ::API::V1::GrapeServer.new
         end
       else
         Faraday.new(url: ::ElibriEdiApiClient::Base.config_base_url) do |builder|
-          builder.use Faraday::Request::BasicAuthentication, 'api', ::ElibriEdiApiClient::Base.config_api_key 
+          builder.use Faraday::Request::Hmac, ::ElibriEdiApiClient::Base.config_api_key, ::ElibriEdiApiClient::Base.config_secret_key
           builder.adapter Faraday.default_adapter
         end
       end
     end
+
+    def extract_message(body)
+      begin
+        json = JSON::parse(body)
+        json["message"] ? json["message"] : body
+      rescue JSON::ParserError
+        return body
+      end
+    end
+
 
     def full_url(path)
       session.build_url(path).to_s

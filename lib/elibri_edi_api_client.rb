@@ -11,6 +11,8 @@ require "elibri_edi_api_client/invoice"
 require "elibri_edi_api_client/factories/order"
 require "elibri_edi_api_client/factories/order_item"
 
+require "faraday/request/hmac"
+
 module ElibriEdiApiClient
 
 end
