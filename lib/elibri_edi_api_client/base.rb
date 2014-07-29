@@ -36,7 +36,7 @@ module ElibriEdiApiClient
     end
 
     def session
-      @sesssion || new_session
+      @sesssion ||= new_session
     end
 
     def post(url)
