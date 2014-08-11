@@ -1,6 +1,6 @@
 module ElibriEdiApiClient
   class DespatchAdvice < Base
-    # TODO: instrukcja użyci
+    # TODO: instrukcja użycia
 
     #TODO: podczas tworzenia obiektu podać gdzieś wersję, żeby nie 
     #dawać na sztywno w wywołaniach
@@ -18,7 +18,7 @@ module ElibriEdiApiClient
 
     def self.create(data)
       unless data[:edi_purchase_order_id]
-        fail InputDataError.new "Can't create DespatchAdvice without :edi_purchase_order_id provided"
+        raise InputDataError.new  status: nil, result: "Can't create DespatchAdvice without :edi_purchase_order_id provided", url: nil
       else
         po = PurchaseOrder.new data[:edi_purchase_order_id]
         po.create_message data

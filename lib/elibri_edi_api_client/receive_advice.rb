@@ -9,7 +9,7 @@ module ElibriEdiApiClient
 
     def self.create(data)
       unless data[:edi_purchase_order_id]
-        fail InputDataError.new "Can't create ReceiveAdvice without :edi_purchase_order_id provided"
+        raise InputDataError.new status: nil, result: "Can't create ReceiveAdvice without :edi_purchase_order_id provided", url: nil
       else
         po = PurchaseOrder.new data[:edi_purchase_order_id]
         po.create_message data
