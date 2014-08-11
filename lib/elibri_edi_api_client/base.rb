@@ -31,7 +31,7 @@ module ElibriEdiApiClient
         @data = id_or_data.to_edi_message
         @id = @data[:id] if @data[:id]
       else
-        fail InputDataError, "Please give integer id, hash of data or edi data Factory"
+        raise InputDataError.new status: nil, result: "Please give integer id, hash of data or edi data Factory", url: full_url(path)
       end
     end
 
@@ -151,13 +151,13 @@ module ElibriEdiApiClient
         begin
           block.call
         rescue Faraday::TimeoutError
-          raise TimeoutError.new("Timed out getting #{full_url(path)}")
+          raise TimeoutError.new status: nil, result: "Timed out establishing connection", url: full_url(path)
         rescue Faraday::ConnectionFailed
           begin
             reconnect
             block.call
           rescue Faraday::ConnectionFailed
-            raise ConnectionFailedError.new("Unable to connect to #{full_url(path)}")
+            raise ConnectionFailedError.new status: nil, result: "Unable to establish connection", url: full_url(path)
           end
         end
       process_response res, path
@@ -174,17 +174,17 @@ module ElibriEdiApiClient
           @id = @response_data[:id]
         end
       elsif response.status == 400
-        fail BadRequestError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise BadRequestError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 403
-        fail ForbiddenError.new    status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise ForbiddenError.new    status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 401 #unauthorized
-        fail UnauthorizedError.new status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise UnauthorizedError.new status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 404
-        fail NotFoundError.new     status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise NotFoundError.new     status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (400..499).include? response.status
-        fail HTTPClientError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise HTTPClientError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (500..599).include? response.status
-        fail ServerError.new       status: response.status, result: extract_message(response.body), url: full_url(path)
+        raise ServerError.new       status: response.status, result: extract_message(response.body), url: full_url(path)
       end
     end
 
