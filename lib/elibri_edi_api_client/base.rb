@@ -224,7 +224,20 @@ module ElibriEdiApiClient
 
   end
 
-  class Error < StandardError; end
+  class Error < StandardError 
+    attr_accessor :status, :result, :url
+
+    def initialize(options={})
+      self.status = options[:status]
+      self.result = options[:result]
+      self.url = options[:url]
+    end
+
+    def message
+      "status: #{status}, result: #{result}, url: #{url}"
+    end
+  
+  end
   class TimeoutError < ElibriEdiApiClient::Error; end
   class ConnectionFailedError < ElibriEdiApiClient::Error; end
   class InputDataError < ElibriEdiApiClient::Error; end
