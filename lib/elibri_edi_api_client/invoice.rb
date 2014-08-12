@@ -13,5 +13,11 @@ module ElibriEdiApiClient
       i
     end
 
+    def upload_pdf(blob)
+      @data = { blob: Base64::encode64(blob) }
+      put 'v1/invoices/:id/upload_pdf'
+      return self
+    end
+
   end
 end

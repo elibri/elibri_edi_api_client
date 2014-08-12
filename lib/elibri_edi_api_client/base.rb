@@ -39,18 +39,16 @@ module ElibriEdiApiClient
       @sesssion ||= self.class.new_session
     end
 
-    def post(url)
-      _post url, @data
+    def post(url_template, headers = {})
+      _post url_for(url_template), @data, headers
     end
 
     def get(url_template)
-      @request_data = @data.dup if @data
       _get(url_for(url_template))
     end
 
-    def put(url_template)
-      @request_data = @data.dup if @data
-      _put url_for(url_template), @data
+    def put(url_template, headers = {})
+      _put url_for(url_template), @data, headers
     end
 
     def url_for(url_template)
@@ -105,8 +103,8 @@ module ElibriEdiApiClient
     def _get(path, headers={})
       make_safe_request(path) do
         session.get(path) do |req|
-          req.headers = req.headers.merge(headers)
           req.headers = req.headers.merge('Content-Type' => 'application/json')
+          req.headers = req.headers.merge(headers)
         end
       end
     end
@@ -114,8 +112,8 @@ module ElibriEdiApiClient
     def _put(path, data, headers={})
       make_safe_request(path) do
         session.put(path) do |req|
-          req.headers = req.headers.merge(headers)
           req.headers = req.headers.merge('Content-Type' => 'application/json')
+          req.headers = req.headers.merge(headers)
           data = JSON.dump data unless String === data
           req.body = data
         end
@@ -125,8 +123,9 @@ module ElibriEdiApiClient
     def _post(path, data, headers={})
       make_safe_request(path) do
         session.post(path) do |req|
-          req.headers = req.headers.merge(headers)
           req.headers = req.headers.merge('Content-Type' => 'application/json')
+          req.headers = req.headers.merge(headers)
+          binding.pry
           data = JSON.dump data unless String === data
           req.body = data
         end
@@ -136,8 +135,8 @@ module ElibriEdiApiClient
     def delete(path, headers={})
       make_safe_request(path) do
         session.delete(path) do |req|
-          req.headers = req.headers.merge(headers)
           req.headers = req.headers.merge('Content-Type' => 'application/json')
+          req.headers = req.headers.merge(headers)
         end
       end
     end
