@@ -125,7 +125,7 @@ module ElibriEdiApiClient
         session.post(path) do |req|
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
-          binding.pry
+          # binding.pry
           data = JSON.dump data unless String === data
           req.body = data
         end
@@ -235,7 +235,7 @@ module ElibriEdiApiClient
     def message
       "status: #{status}, result: #{result}, url: #{url}"
     end
-  
+
   end
   class TimeoutError < ElibriEdiApiClient::Error; end
   class ConnectionFailedError < ElibriEdiApiClient::Error; end
