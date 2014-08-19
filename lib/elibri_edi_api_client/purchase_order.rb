@@ -31,16 +31,5 @@ module ElibriEdiApiClient
       o.post url
     end
 
-    # prawdopodobnie do wywalenia
-    def ediex_process(ediex_name)
-      enqueue_ediex_process ediex_name
-    end
-
-    private
-    # prawdopodobnie do wywalenia
-    def enqueue_ediex_process(ediex_name)
-      job_class = "#{ediex_name}::ResqueJob::ProcessNewOrder".constantize
-      Resque.enqueue job_class, self[:id]
-    end
   end
 end

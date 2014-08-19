@@ -237,6 +237,7 @@ module ElibriEdiApiClient
     end
 
   end
+  class InsufficientData < StandardError; end
   class TimeoutError < ElibriEdiApiClient::Error; end
   class ConnectionFailedError < ElibriEdiApiClient::Error; end
   class InputDataError < ElibriEdiApiClient::Error; end
@@ -258,7 +259,6 @@ module ElibriEdiApiClient
   class NotFoundError < HTTPClientError; end
   class BadRequestError < HTTPClientError; end
   class ForbiddenError < HTTPClientError; end
-
   class ServerError < HTTPError; end
 
 end

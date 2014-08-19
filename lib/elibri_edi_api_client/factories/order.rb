@@ -42,6 +42,8 @@ module ElibriEdiApiClient
       end
 
       def to_edi_message
+        raise InsufficientData unless valid?
+
         {}.tap do |res|
           res[:kind] = 'ORDER'
           res[:buyer_number] = self.buyer_number
