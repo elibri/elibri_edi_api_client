@@ -97,7 +97,7 @@ module ElibriEdiApiClient
           res[:seller_city] = self.seller_city
           res[:seller_post_code] = self.seller_post_code
           res[:seller_tax_id] = seller_tax_id
-          
+
           res[:buyer_name] = self.buyer_name
           res[:buyer_address] = self.buyer_address
           res[:buyer_city] = self.buyer_city
@@ -111,6 +111,7 @@ module ElibriEdiApiClient
 
           res[:items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = idx + 1; line }
           res[:summary] = {
+            :total_lines => self.line_items.count,
             :net_amount => self.net_amount,
             :tax_amount => self.tax_amount,
             :gross_amount => self.net_amount + self.tax_amount,
