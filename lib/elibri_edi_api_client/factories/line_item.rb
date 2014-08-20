@@ -1,6 +1,6 @@
 module ElibriEdiApiClient
   module Factories
-    class OrderItem
+    class LineItem
 
       include ActiveModel::Validations
 

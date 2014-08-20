@@ -14,7 +14,7 @@ module ElibriEdiApiClient
                     :despatching_mode,  #one of (single, multi) - 
                     :invoicing_mode,    #one of (with_despatch, after_receive) - should the invoice be created with shipment, or after the customer
                                         #has confirmed, what he or she has received
-                    :line_items         #one or many of OrderItem
+                    :line_items         #one or many of LineItem
 
 
       validates :buyer_number, presence: true
@@ -33,11 +33,11 @@ module ElibriEdiApiClient
 
       def add_line_item(item)
         if item.is_a?(Hash)
-          self.line_items << OrderItem.new(item)
-        elsif item.is_a?(OrderItem)
+          self.line_items << LineItem.new(item)
+        elsif item.is_a?(LineItem)
           self.line_items << item
         else
-          raise ArgumentError, "Hash or ElibriEdiApiClient::Factories::OrderItem expected"
+          raise ArgumentError, "Hash or ElibriEdiApiClient::Factories::LineItem expected"
         end
       end
 
