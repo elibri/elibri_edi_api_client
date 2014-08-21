@@ -169,9 +169,7 @@ module ElibriEdiApiClient
         @response_headers = response.headers
         @response_data = json
         @data = @response_data
-        if response.status == 201 #created
-          @id = @response_data[:id]
-        end
+        @id = @response_data[:id]
       elsif response.status == 400
         raise BadRequestError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 403
