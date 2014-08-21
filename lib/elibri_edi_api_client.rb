@@ -14,8 +14,7 @@ require "elibri_edi_api_client/factories/invoice"
 require "elibri_edi_api_client/factories/invoice_item"
 require "elibri_edi_api_client/factories/invoice_summary_line"
 require "elibri_edi_api_client/factories/receive_advice"
-
-
+require "elibri_edi_api_client/factories/despatch_advice"
 
 require "faraday/request/hmac"
 
