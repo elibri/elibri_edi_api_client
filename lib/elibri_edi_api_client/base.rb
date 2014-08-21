@@ -72,7 +72,7 @@ module ElibriEdiApiClient
     end
 
     def id
-      @data[:id]
+      @id
     end
 
     def self.def_attributes(*attributes)
