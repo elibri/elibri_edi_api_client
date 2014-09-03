@@ -15,9 +15,5 @@ module ElibriEdiApiClient
       put "v1/input_files/:id"
       self
     end
-
-    def enqueue_ediex_mark_processed
-      Resque.enqueue ResqueJob::Ediex::ChangeInputFileState, self[:id], :processed_ok
-    end
   end
 end
