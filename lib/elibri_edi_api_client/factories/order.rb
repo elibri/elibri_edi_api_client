@@ -20,8 +20,8 @@ module ElibriEdiApiClient
       validates :buyer_number, presence: true
       validates :buyer_id, presence: true
       validates :seller_id, presence: true
-      validates :despatching_mode, presence: true, inclusion: { in: %w(single multi) }
-      validates :invoicing_mode, presence: true, inclusion: { in: %w(with_despatch after_receive) }
+      validates :despatching_mode, presence: true, inclusion: { in: %w(single multi digital) }
+      validates :invoicing_mode, presence: true, inclusion: { in: %w(with_despatch after_receive no_invoice digital_clearance) }
 
 
       def initialize(attributes={})
