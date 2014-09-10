@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require "elibri_edi_api_client/version"
 
 require "elibri_edi_api_client/base"

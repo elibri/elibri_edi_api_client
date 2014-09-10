@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ElibriEdiApiClient
   class Company < Base
 

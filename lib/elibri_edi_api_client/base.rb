@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ElibriEdiApiClient
   MESSAGE_KIND_MAPPING = {
     'ORDER' => 'ElibriEdiApiClient::PurchaseOrder',
