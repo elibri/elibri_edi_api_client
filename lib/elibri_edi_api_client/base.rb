@@ -185,6 +185,11 @@ module ElibriEdiApiClient
       end
     end
 
+    protected
+    def replace_data(new_data)
+      @data = new_data
+    end
+
     private
     #FIXME: Najlepiej byłoby udostępnić na zewnątrz możliwość budowania obiektu @session
     # (w sieci raczej używa się nazwy connection), tak aby to wykorzystujący naszego klienta
@@ -217,7 +222,6 @@ module ElibriEdiApiClient
     def full_url(path)
       session.build_url(path).to_s
     end
-
 
   end
 

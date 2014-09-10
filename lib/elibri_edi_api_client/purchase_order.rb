@@ -31,5 +31,16 @@ module ElibriEdiApiClient
       o.post url
     end
 
+    def set_seller_number(seller_number)
+      self.replace_data(seller_number: seller_number, id: id)
+      post "v1/purchase_orders/:id/set_seller_number"
+    end
+
+    def self.find_by_seller_number(seller_number)
+      o = new(seller_number: seller_number)
+      o.post "v1/purchase_orders/find_by_seller_number"
+      o
+    end
+
   end
 end
