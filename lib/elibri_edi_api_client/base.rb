@@ -32,7 +32,7 @@ module ElibriEdiApiClient
         @data = id_or_data.to_edi_message
         @id = @data[:id] if @data[:id]
       else
-        raise InputDataError.new status: nil, result: "Please give integer id, hash of data or edi data Factory", url: full_url(path)
+        raise InputDataError, "Please give integer id, hash of data or edi data Factory"
       end
     end
 
@@ -226,24 +226,12 @@ module ElibriEdiApiClient
 
   end
 
-  class Error < StandardError 
-    attr_accessor :status, :result, :url
+  class Error < StandardError; end
 
-    def initialize(options={})
-      self.status = options[:status]
-      self.result = options[:result]
-      self.url = options[:url]
-    end
-
-    def message
-      "status: #{status}, result: #{result}, url: #{url}"
-    end
-
-  end
-  class InsufficientData < StandardError; end
-  class TimeoutError < ElibriEdiApiClient::Error; end
-  class ConnectionFailedError < ElibriEdiApiClient::Error; end
-  class InputDataError < ElibriEdiApiClient::Error; end
+  class InsufficientData      < Error; end
+  class TimeoutError          < Error; end
+  class ConnectionFailedError < Error; end
+  class InputDataError        < Error; end
 
   class HTTPError < Error
     attr_accessor :status, :result, :url
