@@ -166,7 +166,7 @@ module ElibriEdiApiClient
     def process_response(response, path)
 
       if response.status.to_s[0] == '2' #status 200 (GET OK) lub 201 (created OK)
-        json = JSON.parse response.body, symbolize_keys: true
+        json = JSON.parse(response.body).deep_symbolize_keys
         @response_headers = response.headers
         @response_data = json
         @data = @response_data
