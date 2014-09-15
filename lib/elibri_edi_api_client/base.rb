@@ -13,7 +13,7 @@ module ElibriEdiApiClient
 
     #configuration
     class << self
-      attr_accessor :config_base_url, :config_api_key, :config_secret_key
+      attr_accessor :config_base_url, :config_api_key, :config_secret_key, :config_timeout
     end
     def self.setup(&block)
       yield self
@@ -106,6 +106,7 @@ module ElibriEdiApiClient
         session.get(path) do |req|
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
+          req.options.timeout = config_timeout
         end
       end
     end
@@ -115,6 +116,7 @@ module ElibriEdiApiClient
         session.put(path) do |req|
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
+          req.options.timeout = config_timeout
           data = JSON.dump data unless String === data
           req.body = data
         end
@@ -126,6 +128,7 @@ module ElibriEdiApiClient
         session.post(path) do |req|
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
+          req.options.timeout = config_timeout
           # binding.pry
           data = JSON.dump data unless String === data
           req.body = data
@@ -138,6 +141,7 @@ module ElibriEdiApiClient
         session.delete(path) do |req|
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
+          req.options.timeout = config_timeout
         end
       end
     end
@@ -146,18 +150,22 @@ module ElibriEdiApiClient
       @session = self.class.new_session
     end
 
+    def config_timeout
+      ::ElibriEdiApiClient::Base.config_timeout
+    end
+
     def make_safe_request(path, &block)
       res =
         begin
           block.call
         rescue Faraday::TimeoutError
-          raise TimeoutError.new status: nil, result: "Timed out establishing connection", url: full_url(path)
+          raise TimeoutError.new info: "Timed out establishing connection", url: full_url(path)
         rescue Faraday::ConnectionFailed
           begin
             reconnect
             block.call
           rescue Faraday::ConnectionFailed
-            raise ConnectionFailedError.new status: nil, result: "Unable to establish connection", url: full_url(path)
+            raise ConnectionFailedError.new info: "Unable to establish connection", url: full_url(path)
           end
         end
       process_response res, path
@@ -229,9 +237,22 @@ module ElibriEdiApiClient
   class Error < StandardError; end
 
   class InsufficientData      < Error; end
-  class TimeoutError          < Error; end
-  class ConnectionFailedError < Error; end
   class InputDataError        < Error; end
+
+  class HTTPConnectionError < Error
+    attr_accessor :info, :url
+    def initialize(options)
+      @info = options[:info]
+      @url = options[:url]
+    end
+
+    def to_s
+      "API call to #{@url} did not succeed because of connection error: #{@info}"
+    end
+  end
+
+  class TimeoutError          < HTTPConnectionError; end
+  class ConnectionFailedError < HTTPConnectionError; end
 
   class HTTPError < Error
     attr_accessor :status, :result, :url
