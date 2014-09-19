@@ -117,7 +117,7 @@ module ElibriEdiApiClient
             :tax_amount => self.tax_amount,
             :gross_amount => self.net_amount + self.tax_amount,
             :items_count => self.line_items.size,
-            :tax_rate_summary => self.summary_lines.map(&:to_hash)
+            :tax_rate_summaries => self.summary_lines.map(&:to_hash)
           }
         end
       end
