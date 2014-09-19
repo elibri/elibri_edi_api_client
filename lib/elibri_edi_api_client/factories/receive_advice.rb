@@ -16,7 +16,7 @@ module ElibriEdiApiClient
 
       def initialize(attributes={})
         attributes.each do |key, value|
-          self.send("#{key}=", value)
+          self.send("#{key}=", value.to_s)
         end
         self.line_items = []
       end
@@ -39,7 +39,7 @@ module ElibriEdiApiClient
           res[:order_id] = self.order_id
           res[:buyer_number] = self.buyer_number
           res[:despatch_advice_id] = self.despatch_advice_id
-          res[:line_items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = idx + 1; line }
+          res[:line_items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
         end
       end
     end

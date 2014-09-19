@@ -43,7 +43,7 @@ module ElibriEdiApiClient
 
       def initialize(attributes={})
         attributes.each do |key, value|
-          self.send("#{key}=", value)
+          self.send("#{key}=", value.to_s)
         end
         self.line_items = []
         self.summary_lines = []
@@ -110,13 +110,13 @@ module ElibriEdiApiClient
           res[:delivery_detail_city] = self.delivery_detail_city
           res[:delivery_detail_post_code] = self.delivery_detail_post_code
 
-          res[:items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = idx + 1; line }
+          res[:items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
           res[:summary] = {
-            :total_lines => self.line_items.count,
-            :net_amount => self.net_amount,
-            :tax_amount => self.tax_amount,
-            :gross_amount => self.net_amount + self.tax_amount,
-            :items_count => self.line_items.size,
+            :total_lines => self.line_items.count.to_s,
+            :net_amount => self.net_amount.to_s,
+            :tax_amount => self.tax_amount.to_s,
+            :gross_amount => (self.net_amount + self.tax_amount).to_s,
+            :items_count => self.line_items.size.to_s,
             :tax_rate_summaries => self.summary_lines.map(&:to_hash)
           }
         end

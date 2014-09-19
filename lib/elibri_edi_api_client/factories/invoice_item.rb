@@ -17,7 +17,7 @@ module ElibriEdiApiClient
 
       def initialize(attributes={})
         attributes.each do |key, value|
-          self.send("#{key}=", value)
+          self.send("#{key}=", value.to_s)
         end
       end
 

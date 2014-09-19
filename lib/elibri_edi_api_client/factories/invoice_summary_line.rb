@@ -17,10 +17,10 @@ module ElibriEdiApiClient
 
       def to_hash
         {}.tap do |res|
-          res[:tax_rate] = self.tax_rate
-          res[:net_amount] = self.net_amount
-          res[:tax_amount] = self.tax_amount
-          res[:gross_amount] = self.net_amount + self.tax_amount
+          res[:tax_rate] = self.tax_rate.to_s
+          res[:net_amount] = self.net_amount.to_s
+          res[:tax_amount] = self.tax_amount.to_s
+          res[:gross_amount] = (self.net_amount + self.tax_amount).to_s
         end
       end
     end
