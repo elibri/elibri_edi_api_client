@@ -36,7 +36,7 @@ module ElibriEdiApiClient
                     :delivery_detail_city,     #miasto adresu odbioru
                     :delivery_detail_post_code,#kod pocztowy adresu dostawy
 
-                    :line_items,               #one or many of InvoiceItem
+                    :items,               #one or many of InvoiceItem
                     :summary_lines
 
 
@@ -47,15 +47,15 @@ module ElibriEdiApiClient
         attributes.each do |key, value|
           self.send("#{key}=", value.to_s)
         end
-        self.line_items = []
+        self.items = []
         self.summary_lines = []
       end
 
       def add_line_item(item)
         if item.is_a?(Hash)
-          self.line_items << InvoiceItem.new(item)
+          self.items << InvoiceItem.new(item)
         elsif item.is_a?(InvoiceItem)
-          self.line_items << item
+          self.items << item
         else
           raise ArgumentError, "Hash or ElibriEdiApiClient::Factories::InvoiceItem expected"
         end
@@ -114,13 +114,13 @@ module ElibriEdiApiClient
           res[:delivery_detail_city] = self.delivery_detail_city
           res[:delivery_detail_post_code] = self.delivery_detail_post_code
 
-          res[:items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
+          res[:items] = self.items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
           res[:summary] = {
-            :total_lines => self.line_items.count.to_s,
+            :total_lines => self.items.count.to_s,
             :net_amount => self.net_amount.to_s,
             :tax_amount => self.tax_amount.to_s,
             :gross_amount => (self.net_amount + self.tax_amount).to_s,
-            :items_count => self.line_items.size.to_s,
+            :items_count => self.items.size.to_s,
             :tax_rate_summaries => self.summary_lines.map(&:to_hash)
           }
         end
