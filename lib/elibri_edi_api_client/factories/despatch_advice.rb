@@ -6,6 +6,7 @@ module ElibriEdiApiClient
       include ActiveModel::Validations
 
       attr_accessor :order_id,                 #numer zamówienia
+                    :order_buyer_number,
                     :seller_number,            #numer sprzedającego
                     :line_items
 
@@ -35,6 +36,7 @@ module ElibriEdiApiClient
         {}.tap do |res|
           res[:kind] = 'DESADV'
           res[:order_id] = self.order_id
+          res[:order_buyer_number] = self.order_buyer_number if self.order_buyer_number.present?
           res[:seller_number] = self.seller_number
           res[:line_items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
         end

@@ -11,6 +11,8 @@ module ElibriEdiApiClient
                     :buyer_id,                 #numer kartoteki kupującego
                     :delivery_detail_id,       #numer kartoteki dla wysyłki
                     :order_id,                 #numer zamówienia
+                    :order_buyer_number,       #numer zamówienia w systemie kupującego
+
 
                     :invoice_date,             #data wystawienia faktury
                     :sales_date,               #data sprzedaży
@@ -88,6 +90,8 @@ module ElibriEdiApiClient
           res[:buyer_id] = self.buyer_id
           res[:delivery_detail_id] = self.delivery_detail_id
           res[:order_id] = self.order_id
+          res[:order_buyer_number] = self.order_buyer_number if self.order_buyer_number.present?
+
           res[:invoice_date] = self.invoice_date
           res[:sales_date] = self.sales_date
           res[:delivery_date] = self.delivery_date
