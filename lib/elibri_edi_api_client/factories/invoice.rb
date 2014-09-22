@@ -36,6 +36,8 @@ module ElibriEdiApiClient
                     :delivery_detail_city,     #miasto adresu odbioru
                     :delivery_detail_post_code,#kod pocztowy adresu dostawy
 
+                    :pdf,                      #pdf z fakturą - base64
+
                     :items,               #one or many of InvoiceItem
                     :summary_lines
 
@@ -113,6 +115,8 @@ module ElibriEdiApiClient
           res[:delivery_detail_address] = self.delivery_detail_address
           res[:delivery_detail_city] = self.delivery_detail_city
           res[:delivery_detail_post_code] = self.delivery_detail_post_code
+
+          res[:pdf] = self.pdf if self.pdf.present?
 
           res[:items] = self.items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
           res[:summary] = {
