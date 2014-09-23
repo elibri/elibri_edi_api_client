@@ -14,6 +14,11 @@ module ElibriEdiApiClient
       i
     end
 
+    #zwraca dane jako base64
+    def download_pdf
+      JSON.parse(session.get("v1/invoices/#{self.id}/get_pdf").body)["blob"]
+    end
+
     def upload_pdf(blob)
       @data = { blob: Base64::encode64(blob) }
       put 'v1/invoices/:id/upload_pdf'
