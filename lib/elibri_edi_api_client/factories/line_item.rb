@@ -8,7 +8,7 @@ module ElibriEdiApiClient
 
       attr_accessor :quantity,   
                     :net_price,   #netto_unit_price
-                    :tax_percent,
+                    :tax_rate,
                     :ean,
                     :buyer_code,  #may be blank
                     :description
@@ -23,7 +23,7 @@ module ElibriEdiApiClient
         {}.tap do |res|
           res[:quantity] = self.quantity
           res[:net_price] = self.net_price if self.net_price.present?
-          res[:tax_percent] = self.tax_percent if self.tax_percent.present?
+          res[:tax_rate] = self.tax_rate if self.tax_rate.present?
           res[:ean] = self.ean 
           res[:buyer_code] = self.buyer_code if self.buyer_code.present?
           res[:description] = self.description if self.description.present?

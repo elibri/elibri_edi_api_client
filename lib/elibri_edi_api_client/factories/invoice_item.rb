@@ -8,7 +8,7 @@ module ElibriEdiApiClient
       attr_accessor :quantity,   
                     :net_price,   
                     :net_amount,
-                    :tax_percent,
+                    :tax_rate,
                     :tax_amount,
                     :ean,
                     :buyer_code,  #may be blank
@@ -26,7 +26,7 @@ module ElibriEdiApiClient
           res[:quantity] = self.quantity
           res[:net_price] = self.net_price
           res[:net_amount] = self.net_amount
-          res[:tax_percent] = self.tax_percent
+          res[:tax_rate] = self.tax_rate
           res[:tax_amount] = self.tax_amount
           res[:ean] = self.ean 
           res[:buyer_code] = self.buyer_code if self.buyer_code.present?
