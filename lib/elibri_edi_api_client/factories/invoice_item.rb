@@ -15,6 +15,9 @@ module ElibriEdiApiClient
                     :description, 
                     :reference_number #PKWiU
 
+      validates_numericality_of :net_price, greater_than: 0
+      validates :description, presence: true
+
       def initialize(attributes={})
         attributes.each do |key, value|
           self.send("#{key}=", value.to_s)
