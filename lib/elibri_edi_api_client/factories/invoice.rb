@@ -42,7 +42,16 @@ module ElibriEdiApiClient
                     :summary_lines
 
 
+      validates :buyer_id, presence: true
+      validates :seller_id, presence: true
+      validates :delivery_detail_id, presence: true
       validates :invoice_number, presence: true
+
+      validates :invoice_date, :sales_date, :payment_due_date, presence: true
+      validates :seller_name, :seller_address, :seller_city, :seller_post_code, :seller_tax_id, presence: true
+      validates :buyer_name, :buyer_address, :buyer_city, :buyer_post_code, :buyer_tax_id, presence: true
+      validates :delivery_detail_name, :delivery_detail_address, :delivery_detail_city, :delivery_detail_post_code, presence: true
+
       validates :document_type, presence: true, inclusion: { in: %w(i c) }
 
       def initialize(attributes={})
