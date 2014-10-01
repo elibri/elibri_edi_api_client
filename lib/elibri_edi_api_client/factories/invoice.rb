@@ -127,7 +127,7 @@ module ElibriEdiApiClient
 
           res[:pdf] = self.pdf if self.pdf.present?
 
-          res[:items] = self.items.reject {|i| i.quantity == 0}.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
+          res[:items] = self.items.reject {|i| i.quantity.to_i == 0}.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
           res[:summary] = {
             :total_lines => self.items.count.to_s,
             :net_amount => self.net_amount.to_s,
