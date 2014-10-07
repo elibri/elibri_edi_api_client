@@ -159,7 +159,7 @@ module ElibriEdiApiClient
         begin
           block.call
         rescue Faraday::TimeoutError
-          raise TimeoutError.new info: "Timed out establishing connection", url: full_url(path)
+          raise TimeoutError.new info: "Connection timed out", url: full_url(path)
         rescue Faraday::ConnectionFailed
           begin
             reconnect
