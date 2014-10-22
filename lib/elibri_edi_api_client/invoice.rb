@@ -14,15 +14,22 @@ module ElibriEdiApiClient
       i
     end
 
-    #zwraca dane jako base64
+    # zwraca dane jako base64
+    # aktualizuje także własny hash @data o dane i nazwę pliku pdf
+    # Jeśli faktura nie ma pdf to zostanie rzucony wyjątek ElibriEdiApiClient::NotFoundError
     def download_pdf
-      JSON.parse(session.get("v1/invoices/#{self.id}/get_pdf").body)["blob"]
+      cached_data = data
+      get "v1/invoices/:id/get_pdf"
+      pdf_data = data[:blob]
+      pdf_filename = data[:file_name]
+      replace_data cached_data.merge(pdf: pdf_data, pdf_filename: pdf_filename)
+      pdf_data
     end
 
-    def upload_pdf(blob)
-      @data = { blob: Base64::encode64(blob) }
+    def upload_pdf(blob, file_name='invoice.pdf')
+      @data = { blob: Base64::encode64(blob), file_name: file_name }
       put 'v1/invoices/:id/upload_pdf'
-      return self
+      self
     end
 
   end
