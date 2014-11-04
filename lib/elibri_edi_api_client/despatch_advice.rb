@@ -17,6 +17,13 @@ module ElibriEdiApiClient
       o
     end
 
+    def self.find_by_order_id(order_id)
+      raise InputDataError, "Invalid order_id provided"  unless order_id.kind_of? Integer
+      o = new(order_id: order_id)
+      o.get "v1/despatch_advices/by_order_id?order_id=#{order_id}"
+      o
+    end
+
     def self.create(data)
       unless data[:edi_purchase_order_id]
         raise InputDataError, "Can't create DespatchAdvice without :edi_purchase_order_id provided"

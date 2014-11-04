@@ -30,6 +30,7 @@ module ElibriEdiApiClient
       o = klass.new(data)
       url = self.url_for 'v1/purchase_orders/:id/messages'
       o.post url
+      o
     end
 
     def set_seller_number(seller_number)
@@ -40,6 +41,18 @@ module ElibriEdiApiClient
     def self.find_by_seller_number(seller_number)
       o = new(seller_number: seller_number)
       o.post "v1/purchase_orders/find_by_seller_number"
+      o
+    end
+
+    def self.find_by_buyer_number(buyer_number)
+      o = new(buyer_number: buyer_number)
+      o.post "v1/purchase_orders/find_by_fields"
+      o
+    end
+
+    def self.find_by_fields(params)
+      o = new(params)
+      o.post "v1/purchase_orders/find_by_fields"
       o
     end
 
