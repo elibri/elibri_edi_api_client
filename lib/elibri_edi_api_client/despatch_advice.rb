@@ -25,10 +25,10 @@ module ElibriEdiApiClient
     end
 
     def self.create(data)
-      unless data[:edi_purchase_order_id]
-        raise InputDataError, "Can't create DespatchAdvice without :edi_purchase_order_id provided"
+      unless data[:order_id]
+        raise InputDataError, "Can't create DespatchAdvice without :order_id provided"
       else
-        po = PurchaseOrder.new data[:edi_purchase_order_id]
+        po = PurchaseOrder.new data[:order_id]
         po.create_message data
       end
     end
