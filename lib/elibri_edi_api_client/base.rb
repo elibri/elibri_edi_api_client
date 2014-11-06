@@ -23,9 +23,9 @@ module ElibriEdiApiClient
     attr_reader :response_data, :response_headers, :data
 
     def initialize(id_or_data)
-      if id_or_data.is_a? Integer || id_or_data.to_i.to_s == id_or_data
+      if id_or_data.is_a?(Integer) || id_or_data.to_i.to_s == id_or_data
         @id = id_or_data.to_i
-      elsif id_or_data.is_a? Hash
+      elsif id_or_data.is_a?(Hash)
         @data = id_or_data
         @id = @data[:id] if @data[:id]
       elsif id_or_data.respond_to?(:to_edi_message)
