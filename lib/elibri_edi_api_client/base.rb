@@ -23,7 +23,8 @@ module ElibriEdiApiClient
     attr_reader :response_data, :response_headers, :data
 
     def initialize(id_or_data)
-      if id_or_data.is_a?(Integer) || id_or_data.to_i.to_s == id_or_data
+      if ( id_or_data.is_a?(Integer) || 
+           (id_or_data.is_a?(String) && id_or_data.to_i.to_s == id_or_data) )
         @id = id_or_data.to_i
       elsif id_or_data.is_a?(Hash)
         @data = id_or_data
