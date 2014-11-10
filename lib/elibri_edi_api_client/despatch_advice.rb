@@ -1,13 +1,16 @@
 # -*- encoding : utf-8 -*-
 module ElibriEdiApiClient
   class DespatchAdvice < Base
-    # TODO: instrukcja użycia
 
-    #TODO: podczas tworzenia obiektu podać gdzieś wersję, żeby nie 
-    #dawać na sztywno w wywołaniach
-    def self.find(id_or_data)
-      o = new(id_or_data)
-      o.get "v1/despatch_advices/:id"
+    # Despatch Advice is only accessible as linked PurchaseOrder message
+    def self.find(data)
+      data.symbolize_keys!
+      unless data[:order_id] || data[:id]
+        fail InputDataError, "Can't find DespatchAdvice without :id and :order_id provided"
+      end
+
+      o = new(data)
+      o.get "v1/purchase_orders/:order_id/despatch_advices/:id"
       o
     end
 

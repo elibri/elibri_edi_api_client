@@ -2,12 +2,11 @@
 module ElibriEdiApiClient
   class ReceiveAdvice < Base
 
+    # Receive Advice is only accessible as linked PurchaseOrder message
     def self.find(data)
-      unless data[:order_id]
-        fail InputDataError, "Can't find ReceiveAdvice without :order_id provided"
-      end
-      unless data[:id]
-        fail InputDataError, "Can't find ReceiveAdvice without :id provided"
+      data.symbolize_keys!
+      unless data[:order_id] || data[:id]
+        fail InputDataError, "Can't find ReceiveAdvice without :id and :order_id provided"
       end
 
       o = new(data)
