@@ -54,7 +54,12 @@ module ElibriEdiApiClient
     end
 
     def url_for(url_template)
-      url_template.gsub(/:id/, @id.to_s)
+      ret = url_template.dup
+      url_template.scan(/\/:([a-z_]+)/).flatten.each do |m|
+        s = (m == 'id' ? @id : data[m.to_sym])
+        ret.gsub!(":#{m}", s.to_s)
+      end
+      ret
     end
 
     def read
