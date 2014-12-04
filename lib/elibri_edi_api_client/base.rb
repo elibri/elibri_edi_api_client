@@ -6,7 +6,8 @@ module ElibriEdiApiClient
     'DESADV' => 'ElibriEdiApiClient::DespatchAdvice',
     'RECADV' => 'ElibriEdiApiClient::ReceiveAdvice',
     'INVOICE' => 'ElibriEdiApiClient::Invoice',
-    'FILE' => 'ElibriEdiApiClient::InputFile'
+    'FILE' => 'ElibriEdiApiClient::InputFile',
+    'PREORDER_FORM' => 'ElibriEdiApiClient::PreorderForm',
   }
 
   class Base
@@ -193,6 +194,8 @@ module ElibriEdiApiClient
         raise UnauthorizedError.new status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif response.status == 404
         raise NotFoundError.new     status: response.status, result: extract_message(response.body), url: full_url(path)
+      elsif response.status == 432
+        raise RequestNotYetValidError.new  status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (400..499).include? response.status
         raise HTTPClientError.new   status: response.status, result: extract_message(response.body), url: full_url(path)
       elsif (500..599).include? response.status
@@ -277,6 +280,7 @@ module ElibriEdiApiClient
   class NotFoundError < HTTPClientError; end
   class BadRequestError < HTTPClientError; end
   class ForbiddenError < HTTPClientError; end
+  class RequestNotYetValidError < HTTPClientError; end
   class ServerError < HTTPError; end
 
 end
