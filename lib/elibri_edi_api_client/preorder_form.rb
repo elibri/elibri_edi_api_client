@@ -20,7 +20,7 @@ module ElibriEdiApiClient
 
     def url_for_email(email)
       signature = url_signature self.id, email
-      url_for "forms/preorder/:id/#{email}/#{signature}"
+      (URI.parse(ElibriEdiApiClient::Base.config_base_url) + url_for("forms/preorder/:id/#{email}/#{signature}")).to_s
     end
 
     private
