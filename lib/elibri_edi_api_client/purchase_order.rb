@@ -38,6 +38,13 @@ module ElibriEdiApiClient
       post "v1/purchase_orders/:id/set_seller_number"
     end
 
+    # errors should be in form of
+    # { master: 'master error', details: { ean1: 'ean1 error', ean2: 'ean2 error' }}
+    def set_seller_errors(errors)
+      self.replace_data(seller_errors: errors, id: id)
+      post "v1/purchase_orders/:id/set_seller_errors"
+    end
+
     def self.find_by_seller_number(seller_number)
       o = new(seller_number: seller_number)
       o.post "v1/purchase_orders/find_by_seller_number"
