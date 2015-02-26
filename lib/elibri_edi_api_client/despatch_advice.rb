@@ -30,5 +30,9 @@ module ElibriEdiApiClient
       end
     end
 
+    def set_buyer_number(buyer_number)
+      self.replace_data(buyer_number: buyer_number, id: id)
+      post "v1/despatch_advices/:id/set_buyer_number"
+    end
   end
 end
