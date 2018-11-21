@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 module ElibriEdiApiClient
   class DespatchAdvice < Base
 
@@ -11,6 +10,12 @@ module ElibriEdiApiClient
     def self.find_by_seller_number(seller_number)
       o = new(seller_number: seller_number)
       o.get "v1/despatch_advices/by_seller_number?number=#{CGI::escape seller_number}"
+      o
+    end
+
+    def self.find_by_buyer_number(buyer_number)
+      o = new(buyer_number: buyer_number)
+      o.get "v1/despatch_advices/by_buyer_number?number=#{CGI::escape buyer_number}"
       o
     end
 
