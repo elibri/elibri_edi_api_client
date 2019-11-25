@@ -8,6 +8,7 @@ module ElibriEdiApiClient
       attr_accessor :order_id,                 #numer zamówienia
                     :order_buyer_number,
                     :seller_number,            #numer sprzedającego
+                    :pdf,                      #pdf z obrazem awiza - base64
                     :line_items
 
       validates :order_id, presence: true
@@ -39,6 +40,8 @@ module ElibriEdiApiClient
           res[:order_buyer_number] = self.order_buyer_number if self.order_buyer_number.present?
           res[:seller_number] = self.seller_number
           res[:line_items] = self.line_items.map(&:to_hash).each_with_index.map { |line, idx| line[:position] = (idx + 1).to_s; line }
+
+          res[:pdf] = self.pdf if self.pdf.present?
         end
       end
     end
