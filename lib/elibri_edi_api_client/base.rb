@@ -24,7 +24,7 @@ module ElibriEdiApiClient
     attr_reader :response_data, :response_headers, :data
 
     def initialize(id_or_data)
-      if ( id_or_data.is_a?(Integer) || 
+      if ( id_or_data.is_a?(Integer) ||
            (id_or_data.is_a?(String) && id_or_data.to_i.to_s == id_or_data) )
         @id = id_or_data.to_i
       elsif id_or_data.is_a?(Hash)
@@ -76,7 +76,7 @@ module ElibriEdiApiClient
     end
 
     def []=(attr, v)
-      @data[attr] = v 
+      @data[attr] = v
     end
 
     def id
@@ -114,6 +114,7 @@ module ElibriEdiApiClient
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
           req.options.timeout = config_timeout
+          req.options.ssl = {verify: false}
         end
       end
     end
@@ -124,6 +125,8 @@ module ElibriEdiApiClient
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
           req.options.timeout = config_timeout
+          req.options.ssl = {verify: false}
+
           data = JSON.dump data unless String === data
           req.body = data
         end
@@ -136,6 +139,8 @@ module ElibriEdiApiClient
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
           req.options.timeout = config_timeout
+          req.options.ssl = {verify: false}
+
           # binding.pry
           data = JSON.dump data unless String === data
           req.body = data
@@ -149,6 +154,7 @@ module ElibriEdiApiClient
           req.headers = req.headers.merge('Content-Type' => 'application/json')
           req.headers = req.headers.merge(headers)
           req.options.timeout = config_timeout
+          req.options.ssl = {verify: false}
         end
       end
     end
